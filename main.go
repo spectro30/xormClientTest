@@ -16,6 +16,17 @@ import (
 	"kmodules.xyz/client-go/tools/portforward"
 	"xorm.io/xorm"
 )
+var (
+	namespace *string
+	podName *string
+)
+
+func init(){
+	namespace = flag.String("ns", "default", "Namespace Name")
+	podName = flag.String("pod", "myDefaultPod", "Pod Name")
+	flag.Parse()
+
+}
 
 func main() {
 	masterURL := ""
@@ -34,15 +45,12 @@ func main() {
 		panic(err)
 	}
 
-	namespaceName := flag.String("ns", "default", "Namespace Name")
-	podName := flag.String("pod", "default", "Pod Name")
-	flag.Parse()
 
 	fmt.Println(".......................podName", pod.Name)
 	tnl := portforward.NewTunnel(
 		kc.CoreV1().RESTClient(),
 		config,
-		*namespaceName,
+		*namespace,
 		*podName,
 		3306,
 	)
