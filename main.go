@@ -6,6 +6,7 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"log"
 	"path/filepath"
+	"flag"
 
 	_ "github.com/go-sql-driver/mysql"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -33,17 +34,21 @@ func main() {
 		panic(err)
 	}
 
+	namespaceName := flag.String("ns", "default", "Namespace Name")
+	podName := flag.String("pod", "default", "Pod Name")
+	flag.Parse()
+
 	fmt.Println(".......................podName", pod.Name)
 	tnl := portforward.NewTunnel(
 		kc.CoreV1().RESTClient(),
 		config,
-		"demo",
-		"demo-quickstart-0",
+		*namespaceName,
+		*podName,
 		3306,
 	)
 	err = tnl.ForwardPort()
 	if err != nil {
-		fmt.Println("Error in post forward failed")
+		fmt.Println("Error in port forward failed")
 		panic(err)
 	}
 
