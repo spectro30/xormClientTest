@@ -22,8 +22,8 @@ var (
 )
 
 func init(){
-	namespace = flag.String("ns", "default", "Namespace Name")
-	podName = flag.String("pod", "myDefaultPod", "Pod Name")
+	namespace = flag.String("ns", "demo", "Namespace Name")
+	podName = flag.String("pod", "demo-quickstart-0", "Pod Name")
 	flag.Parse()
 
 }
@@ -87,10 +87,16 @@ func main() {
 		panic(err)
 	}
 	fmt.Println("......................................2")
-	result, err := en.QueryString("SHOW VARIABLES LIKE 'require_secure_transport';")
+	result, err := en.QueryString("SHOW STATUS LIKE 'wsrep_cluster_size';")
 	if err != nil {
 		fmt.Println("Error in Query")
 		panic(err)
 	}
-	spew.Dump(result)
+	res := result[0]
+	x, ok := res["Value"]
+	fmt.Println(x)
+	if !ok{
+
+	}
+	//spew.Dump(result)
 }
